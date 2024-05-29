@@ -38,56 +38,28 @@
             <h2>Add New Product</h2>
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label asp-for="NewProduct.ProductName"></label>
-                    <input asp-for="NewProduct.ProductName" class="form-control" />
-                    <span asp-validation-for="NewProduct.ProductName" class="text-danger"></span>
+                    <label asp-for="Prod.ProductName"></label>
+                    <input asp-for="Prod.ProductName" class="form-control" />
+                    <span asp-validation-for="Prod.ProductName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="NewProduct.CategoryID"></label>
-                    <input asp-for="NewProduct.CategoryID" class="form-control" />
-                    <span asp-validation-for="NewProduct.CategoryID" class="text-danger"></span>
+                    <label asp-for="Prod.CategoryID"></label>
+                    <input asp-for="Prod.CategoryID" class="form-control" />
+                    <span asp-validation-for="Prod.CategoryID" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="NewProduct.ProductionDate"></label>
-                    <input asp-for="NewProduct.ProductionDate" class="form-control" />
-                    <span asp-validation-for="NewProduct.ProductionDate" class="text-danger"></span>
+                    <label asp-for="Prod.ProductionDate"></label>
+                    <input asp-for="Prod.ProductionDate" class="form-control" />
+                    <span asp-validation-for="Prod.ProductionDate" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label for="Image">Image</label>
-                    <input type="file" name="Image" class="form-control" />
+                    <label asp-for="Prod.ProductImage" class="control-label"></label>
+                    <input asp-for="Prod.ProductImage" accept="image/*" />
+                    <span asp-validation-for="Prod.ProductImage" class="text-danger"></span>
                 </div>
                 <button type="submit" class="btn btn-primary">Add Product</button>
             </form>
         </div>
     </div>
 </div>
-@section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $("form").submit(function (event) {
-                event.preventDefault();
 
-                var formData = new FormData(this);
-
-                $.ajax({
-                    url: "@Url.Page("./Index", "UploadFile")",
-                    type: "POST",
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        if (response.success) {
-                            alert(response.message);
-                        } else {
-                            alert(response.message);
-                        }
-                    },
-                    error: function () {
-                        alert("File upload failed");
-                    }
-                });
-            });
-        });
-    </script>
-}

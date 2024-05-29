@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Agri_Enery_Connect.Areas.Identity.Data;
 using Microsoft.Extensions.Options;
-
+using Agri_Enery_Connect.Service;
 
 namespace Agri_Enery_Connect
 {
@@ -19,6 +19,7 @@ namespace Agri_Enery_Connect
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AgriEneryConnectContext>();
 
+            builder.Services.AddScoped<IFileService, FileService>();
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 

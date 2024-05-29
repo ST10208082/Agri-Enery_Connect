@@ -12,30 +12,37 @@ using Agri_Enery_Connect.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Logging;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using Agri_Enery_Connect.Service;
+using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace Agri_Enery_Connect.Areas.Identity.Pages.FarmerProducts
 {
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
+        private readonly IFileService _fileService;
+        private readonly IWebHostEnvironment _hostEnvironment;
         private readonly AgriEneryConnectContext _context;
         private readonly UserManager<Agri_EneryUser> _userManager;
 
-        public IndexModel(AgriEneryConnectContext context, UserManager<Agri_EneryUser> userManager, ILogger<IndexModel> logger)
+        public IndexModel(
+            AgriEneryConnectContext context,
+            UserManager<Agri_EneryUser> userManager, 
+            ILogger<IndexModel> logger,
+             IFileService fileService,
+             IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _userManager = userManager;
             _logger = logger;
+            this._fileService = fileService;
+            this._hostEnvironment = hostEnvironment;
         }
 
         public IList<FarmerProduct> Products { get; set; }
 
         [BindProperty]
-        public FarmerProduct NewProduct { get; set; }
-
-
-        [BindProperty]
-        public IFormFile Image { get; set; }
+        public FarmerProduct Prod { get; set; }
 
         public void OnGet()
         {         
@@ -47,58 +54,50 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.FarmerProducts
             else
             {
                 // User is not authenticated
+               
             }
 
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
-            {
-                _logger.LogWarning("UserId not founddddddddddd " + user.Id);
+            {              
                 return Unauthorized();
             }
-
-            if (!ModelState.IsValid || _context.FarmerProduct == null || Products == null)
+            else
             {
-                _logger.LogWarning("noooooooooo");
+                // Set the Users property to the current user's ID
+                Prod.Users = user.Id;
+            }
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("noooooo");
                 return Page();
             }
 
-            
 
-            if (Image != null)
+            //save image to wwwroot/image
+            string wwwRootPath = _hostEnvironment.WebRootPath;
+            string fileName = Path.GetFileNameWithoutExtension(Prod.ProductImage.FileName);
+            string extension = Path.GetExtension(Prod.ProductImage.FileName);
+            Prod.ImagePath = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+            string path = Path.Combine(wwwRootPath + "/images/", fileName);
+            using(var fileStream = new FileStream(path,FileMode.Create))
             {
-                _logger.LogWarning("Image is populated");
-                // Ensure the images folder exists
-                var imagesFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
-                if (!Directory.Exists(imagesFolderPath))
-                {
-                    Directory.CreateDirectory(imagesFolderPath);
-                }
-
-                // Generate a unique file name
-                var uniqueFileName = Guid.NewGuid().ToString() + "_" + Image.FileName;
-
-                // Get the file path
-                var filePath = Path.Combine(imagesFolderPath, uniqueFileName);
-
-                // Save the file to the images folder
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await Image.CopyToAsync(fileStream);
-                }
-
-                // Save the file name to the database (or other storage)
-                NewProduct.ImagePath = uniqueFileName;
+                await Prod.ProductImage.CopyToAsync(fileStream);
             }
 
-            // Set the Users property to the current user's ID
-            NewProduct.Users = user.Id;
+           
+
+
 
             // Save NewProduct to the database
-            _context.FarmerProduct.Add(NewProduct);
+            _logger.LogWarning("Yessss");
+            _context.FarmerProduct.Add(Prod);
             await _context.SaveChangesAsync();
 
             return Page();
