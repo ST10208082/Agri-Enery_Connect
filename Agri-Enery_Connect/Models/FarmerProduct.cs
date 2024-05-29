@@ -17,8 +17,10 @@ namespace Agri_Energy_Connect_Application.Models
         [DataType(DataType.Date)]
         public DateTime ProductionDate { get; set; }
 
+        public string ImagePath { get; set; }
+
         [ForeignKey("AspNetUsers")]
-        public int Users { get; set; }
+        public string Users { get; set; }
 
     }
 }

@@ -4,6 +4,7 @@ using Agri_Enery_Connect.Areas.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Agri_Enery_Connect.Migrations
 {
     [DbContext(typeof(AgriEneryConnectContext))]
-    partial class AgriEneryConnectContextModelSnapshot : ModelSnapshot
+    [Migration("20240529104005_UpdateFarmerProducts")]
+    partial class UpdateFarmerProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace Agri_Enery_Connect.Controllers
 {
-    
+ 
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -19,6 +19,7 @@ namespace Agri_Enery_Connect.Controllers
             this._userManager = userManager;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             ViewData["UserId"] = _userManager.GetUserId(this.User);

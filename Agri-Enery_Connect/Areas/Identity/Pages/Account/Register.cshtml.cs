@@ -145,19 +145,24 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                Response.Redirect("/");
+
+            }
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-           
+
             if (ModelState.IsValid)
             {
                 // Create a new user instance and populate its properties
                 var user = CreateUser();
                 user.FirstName = Input.FirstName;
-                user.LastName = Input.LastName;              
+                user.LastName = Input.LastName;
                 user.DOB = Input.DOB;
                 user.Country = Input.Country;
                 user.Suburb = Input.Suburb;
@@ -182,7 +187,7 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.Account
                         protocol: Request.Scheme);
 
 
-                    
+                    await _userManager.AddToRoleAsync(user, Input.Role);
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
@@ -192,42 +197,21 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.Account
                     }
                     else
                     {
+
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        return RedirectToPage("/Index");
                     }
                     // Continue with login or redirect logic
                     // This section is typically used to sign in the user or redirect them to a specific page
                 }
-                else
-                {
-                    // User creation failed, add model errors and return to registration page
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                    return Page();
-                }
-            
 
-
-
-            if (result.Succeeded)
-                {
-                    _logger.LogInformation("User created a new account with password.");
-
-                    var userId = await _userManager.GetUserIdAsync(user);                   
-
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect(returnUrl);
-                    
-                }
+                // User creation failed, add model errors and return to registration page
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+                
             }
-
-            // If we got this far, something failed, redisplay form
             return Page();
         }
 

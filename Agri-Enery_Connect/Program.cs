@@ -15,7 +15,7 @@ namespace Agri_Enery_Connect
 
             builder.Services.AddDbContext<AgriEneryConnectContext>(options => options.UseSqlServer(connectionString));
 
-            builder.Services.AddDefaultIdentity<Agri_EneryUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            builder.Services.AddDefaultIdentity<Agri_EneryUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AgriEneryConnectContext>();
 
