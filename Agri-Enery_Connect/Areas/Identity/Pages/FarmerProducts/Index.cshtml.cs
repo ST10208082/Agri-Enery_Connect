@@ -73,7 +73,7 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.FarmerProducts
                 Prod.Users = user.Id;
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _logger.LogWarning("noooooo");
                 return Page();
@@ -100,7 +100,9 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.FarmerProducts
             _context.FarmerProduct.Add(Prod);
             await _context.SaveChangesAsync();
 
-            return Page();
+            TempData["SuccessMessage"] = "Product successfully added.";
+
+            return RedirectToPage("/View/Home/Index");
         }
 
 

@@ -14,7 +14,10 @@ namespace Agri_Energy_Connect_Application.Models
 
         [ForeignKey("FarmerCategory")]
         public int CategoryID { get; set; }
-       
+
+        [DisplayName("Category")]
+        public string Category { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime ProductionDate { get; set; }
 

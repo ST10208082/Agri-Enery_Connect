@@ -2,7 +2,7 @@
 @model Agri_Enery_Connect.Areas.Identity.Pages.FarmerProducts.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Your Products";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
@@ -11,7 +11,7 @@
 <div class="container">
     <h1>@ViewData["Title"]</h1>
     <div class="row">
-        <!-- View Products Section -->
+        <!-- Product List Section -->
         <div class="col-md-6">
             <div class="scrollview" style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
                 @if (Model.Products != null && Model.Products.Any())
@@ -20,6 +20,10 @@
                         @foreach (var product in Model.Products)
                         {
                             <li class="list-group-item">
+                                @if (!string.IsNullOrEmpty(product.ImagePath))
+                                {
+                                    <img src="/images/@product.ImagePath" alt="@product.ProductName" style="max-width: 100px; max-height: 100px; margin-right: 10px;" />
+                                }
                                 <strong>@product.ProductName</strong><br />
                                 Category: @product.CategoryID<br />
                                 Production Date: @product.ProductionDate.ToShortDateString()
@@ -60,6 +64,16 @@
                 <button type="submit" class="btn btn-primary">Add Product</button>
             </form>
         </div>
+    </div>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+</div>
+
+
     </div>
 </div>
 
