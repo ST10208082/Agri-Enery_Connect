@@ -24,4 +24,5 @@ public class AgriEneryConnectContext : IdentityDbContext<Agri_EneryUser>
     public DbSet<Agri_Energy_Connect_Application.Models.FarmerCategory> FarmerCategory { get; set; } = default!;
 
     public DbSet<Agri_Energy_Connect_Application.Models.FarmerProduct> FarmerProduct { get; set; } = default!;
+    
 }

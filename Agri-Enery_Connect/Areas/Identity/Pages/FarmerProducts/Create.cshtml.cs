@@ -7,39 +7,45 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Agri_Energy_Connect_Application.Models;
 using Agri_Enery_Connect.Areas.Identity.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Agri_Enery_Connect.Areas.Identity.Pages.FarmerProducts
 {
     public class CreateModel : PageModel
     {
-        private readonly Agri_Enery_Connect.Areas.Identity.Data.AgriEneryConnectContext _context;
+        private readonly AgriEneryConnectContext _context;
 
-        public CreateModel(Agri_Enery_Connect.Areas.Identity.Data.AgriEneryConnectContext context)
+        public CreateModel(AgriEneryConnectContext context)
         {
             _context = context;
         }
 
-        public IActionResult OnGet()
-        {
-            return Page();
-        }
+        public IList<FarmerProduct> FarmerProduct { get; set; }
+        public IList<FarmerCategory> Categories { get; set; }
 
-        [BindProperty]
-        public FarmerProduct FarmerProduct { get; set; } = default!;
-        
+        [BindProperty(SupportsGet = true)]
+        public string SearchTerm { get; set; }
 
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
+        [BindProperty(SupportsGet = true)]
+        public int? Category { get; set; }
+
+        public void OnGet()
         {
-          if (!ModelState.IsValid || _context.FarmerProduct == null || FarmerProduct == null)
+            Categories = _context.FarmerCategory.ToList();
+            var products = from p in _context.FarmerProduct
+                           select p;
+
+            if (!string.IsNullOrEmpty(SearchTerm))
             {
-                return Page();
+                products = products.Where(p => p.ProductName.Contains(SearchTerm));
             }
 
-            _context.FarmerProduct.Add(FarmerProduct);
-            await _context.SaveChangesAsync();
+            if (Category.HasValue && Category > 0)
+            {
+                products = products.Where(p => p.CategoryID == Category);
+            }
 
-            return RedirectToPage("./Index");
+            FarmerProduct = products.ToList();
         }
     }
 }

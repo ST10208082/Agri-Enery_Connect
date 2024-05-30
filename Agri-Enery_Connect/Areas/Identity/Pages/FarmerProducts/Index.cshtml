@@ -25,7 +25,8 @@
                                     <img src="/images/@product.ImagePath" alt="@product.ProductName" style="max-width: 100px; max-height: 100px; margin-right: 10px;" />
                                 }
                                 <strong>@product.ProductName</strong><br />
-                                Category: @product.CategoryID<br />
+                                Category: @(Model.Categories.FirstOrDefault(c => c.Id == product.CategoryID)?.CategoryName ?? "Unknown")
+                                <br />
                                 Production Date: @product.ProductionDate.ToShortDateString()
                             </li>
                         }
@@ -37,6 +38,7 @@
                 }
             </div>
         </div>
+
         <!-- Add Product Section -->
         <div class="col-md-6">
             <h2>Add New Product</h2>
@@ -47,8 +49,14 @@
                     <span asp-validation-for="Prod.ProductName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Prod.CategoryID"></label>
-                    <input asp-for="Prod.CategoryID" class="form-control" />
+                    <label asp-for="Prod.CategoryID">Category</label>
+                    <select asp-for="Prod.CategoryID" class="form-control">
+                        <option value="">-- Select Category --</option>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.Id">@category.CategoryName</option>
+                        }
+                    </select>
                     <span asp-validation-for="Prod.CategoryID" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -71,9 +79,5 @@
             @TempData["SuccessMessage"]
         </div>
     }
-</div>
-
-
-    </div>
 </div>
 

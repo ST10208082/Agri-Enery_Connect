@@ -40,12 +40,14 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.FarmerProducts
         }
 
         public IList<FarmerProduct> Products { get; set; }
+        public IList<FarmerCategory> Categories { get; set; }
 
         [BindProperty]
         public FarmerProduct Prod { get; set; }
 
         public void OnGet()
-        {         
+        {
+            Categories = _context.FarmerCategory.ToList();
             Products = _context.FarmerProduct.ToList();
             if (User.Identity.IsAuthenticated)
             {
