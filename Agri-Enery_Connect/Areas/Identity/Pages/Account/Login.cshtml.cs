@@ -67,10 +67,11 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            /// 
             [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            public string Username { get; set; }
 
+            
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -86,7 +87,7 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.Account
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
-
+       
         public async Task OnGetAsync(string returnUrl = null)
         {
             if (User.Identity.IsAuthenticated)
@@ -108,6 +109,7 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
+        public bool rolecheck { get; private set; }
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
@@ -118,11 +120,17 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 _logger.LogWarning(User.Identity.IsAuthenticated.ToString());
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in successfully.", Input.Email);
+                    var user = await _userManager.FindByNameAsync(Input.Username);
+                    
+                    rolecheck = await _userManager.IsInRoleAsync(user, "Employee");
+
+                    TempData["rolecheck"] = rolecheck;
+
+                    _logger.LogInformation("User logged in successfully.", Input.Username);
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -131,13 +139,13 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.Account
                 }
                 else if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User with email '{Email}' is locked out.", Input.Email);
+                    _logger.LogWarning("User with email '{Email}' is locked out.", Input.Username);
                     ModelState.AddModelError(string.Empty, "User account is locked out.");
                     return Page();
                 }
                 else
                 {
-                    _logger.LogWarning("Invalid login attempt for user with email '{Email}'.", Input.Email);               
+                    _logger.LogWarning("Invalid login attempt for user with email '{Email}'.", Input.Username);               
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
