@@ -39,8 +39,7 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.FarmerProducts
             {
                 products = products.Where(p => p.ProductName.Contains(SearchTerm));
             }
-
-            if (Category.HasValue && Category > 0)
+            else if(Category.HasValue && Category > 0)
             {
                 products = products.Where(p => p.CategoryID == Category);
             }
