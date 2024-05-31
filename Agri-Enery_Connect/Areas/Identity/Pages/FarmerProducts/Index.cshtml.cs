@@ -15,9 +15,12 @@ using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Agri_Enery_Connect.Service;
 using Microsoft.AspNetCore.Routing.Constraints;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Agri_Enery_Connect.Areas.Identity.Pages.FarmerProducts
 {
+    [Authorize(Roles = "Farmer")]
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
