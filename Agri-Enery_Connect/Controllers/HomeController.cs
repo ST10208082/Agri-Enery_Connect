@@ -23,6 +23,7 @@ namespace Agri_Enery_Connect.Controllers
         public IActionResult Index()
         {
             ViewData["UserId"] = _userManager.GetUserId(this.User);
+            var temp = TempData["rolecheck"];
             return View();
         }
 

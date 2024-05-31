@@ -65,6 +65,9 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.FarmerProducts
         {
 
             var user = await _userManager.GetUserAsync(User);
+            var products = from p in _context.FarmerProduct
+                           select p;
+
             if (user == null)
             {              
                 return Unauthorized();

@@ -24,13 +24,16 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.Account
         private readonly UserManager<Agri_EneryUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<Agri_EneryUser> signInManager, UserManager<Agri_EneryUser> userManager, ILogger<LoginModel> logger)
+
+        public LoginModel(SignInManager<Agri_EneryUser> signInManager,UserManager<Agri_EneryUser> userManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
         }
 
+
+        
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
