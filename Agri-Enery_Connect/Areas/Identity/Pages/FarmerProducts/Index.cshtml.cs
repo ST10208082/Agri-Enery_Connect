@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Agri_Enery_Connect.Service;
 using Microsoft.AspNetCore.Routing.Constraints;
+using System.Security.Claims;
 
 namespace Agri_Enery_Connect.Areas.Identity.Pages.FarmerProducts
 {
@@ -48,17 +49,10 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.FarmerProducts
         public void OnGet()
         {
             Categories = _context.FarmerCategory.ToList();
-            Products = _context.FarmerProduct.ToList();
-            if (User.Identity.IsAuthenticated)
-            {
-                // User is authenticated
-            }
-            else
-            {
-                // User is not authenticated
-               
-            }
 
+            var UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            Products = _context.FarmerProduct.Where(p => p.Users == UserId).ToList();
+           
         }
 
         public async Task<IActionResult> OnPostAsync()

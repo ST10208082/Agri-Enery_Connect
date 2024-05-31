@@ -23,7 +23,7 @@ using Microsoft.Extensions.Logging;
 namespace Agri_Enery_Connect.Areas.Identity.Pages.Account
 {
 
-    //[Authorize(Roles = "Employee")]
+    [Authorize(Roles = "Employee")]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<Agri_EneryUser> _signInManager;
@@ -149,7 +149,7 @@ namespace Agri_Enery_Connect.Areas.Identity.Pages.Account
             var temp = TempData["rolecheck"];
             if (!User.IsInRole("Employee"))
             {
-                //Response.Redirect("/");
+                Response.Redirect("/");
                
             }
             ReturnUrl = returnUrl;
